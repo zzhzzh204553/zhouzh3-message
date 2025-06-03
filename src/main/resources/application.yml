@@ -1,0 +1,33 @@
+custom:
+    host-port:
+        host-machine: ${HOST_MACHINE_HOST:10.130.2.54}
+        nacos: ${custom.host-port.host-machine}:8848
+        mysql: ${custom.host-port.host-machine}:3306
+        sentinel: ${custom.host-port.host-machine}:8090
+        redis: ${custom.host-port.host-machine}:6379
+        rocketmq: ${custom.host-port.host-machine}:9876
+        zipkin: ${custom.host-port.host-machine}:9411
+
+
+server:
+    port: 8081
+spring:
+    application:
+        name: zhouzh3-message
+
+    profiles:
+        active: dev
+
+    cloud:
+        stream:
+            rocketmq:
+                binder:
+                    name-server: ${custom.host-port.rocketmq} # RocketMQ 的 NameServer 地址
+            bindings:
+                producer-out-0: # 生产者绑定
+                    destination: test-topic
+                    content-type: application/json
+                consumer-in-0: # 消费者绑定
+                    destination: test-topic
+                    group: my-group
+                    content-type: application/json
